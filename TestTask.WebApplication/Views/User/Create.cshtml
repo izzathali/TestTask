@@ -1,0 +1,219 @@
+﻿@using TestTask.Model;
+@model UserM
+
+@{
+    ViewData["Title"] = "Add User";
+}
+@section link{
+
+
+    }
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1></h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">User</a></li>
+                    <li class="breadcrumb-item active">Add</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content ">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-lightblue">
+                    <div class="card-header">
+                        <h3 class="card-title">Add User</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    @*asp-action="Create"*@
+                    @*enctype="multipart/form-data"*@
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label asp-for="FullName" class="control-label"></label>
+
+                                        <input asp-for="FullName"
+                                               type="text"
+                                               class="form-control"
+                                               placeholder="Full Name">
+
+                                        <div id="vFullName" class="invalid-feedback">Please fill out this field.</div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Password" class="control-label"></label>
+
+                                        <input asp-for="Password"
+                                               type="password"
+                                               class="form-control"
+                                               placeholder="Password">
+
+                                        <div id="vPassword" class="invalid-feedback">Please fill out this field.</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Confirm Password</label>
+
+                                        <input type="password" class="form-control" placeholder="Confirm Password">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Gender" class="control-label"></label>
+
+                                        Unknown <input type="radio" class="form-control" asp-for="Gender" value="1" />
+                                        Male <input type="radio" class="form-control" asp-for="Gender" value="2" />
+                                        Female <input type="radio" class="form-control" asp-for="Gender" value="3" />
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Photo" class="control-label"></label>
+
+                                        <input asp-for="iPhotoFile" accept="image/*" class="form-control" />
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="card-body">
+
+                                    <div class="form-group">
+
+                                        <img id="propic" class="photo img-fluid" style="width:100%;" src="@Url.Content("~/be/dist/img/default.jpg")" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-footer">
+                                    <button id="btnSave" 
+                                            type="button" 
+                                            class="btn btn-primary">
+                                        <span class="tf-icons fas fa-save"></span>&nbsp; Save
+                                    </button>
+                                    <button type="reset" class="btn btn-default">
+                                        <span class="tf-icons fas fa-times"></span>&nbsp; Cancel
+                                    </button>
+
+                                    <button class="btn btn-outline-info pull-right" asp-action="Index">
+                                        <span class="tf-icons fas fa-list-ul"></span>&nbsp; View List
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //Preview & Update an image before it is uploaded
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#propic').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#iPhotoFile").change(function () {
+                readURL(this);
+            })
+
+            //Validation when save button click
+            $("#btnSave").click(function () {
+
+                var fullname = $('#FullName').val();
+                var password = $('#Password').val();
+
+                if (fullname == "") {
+                    customvalidation('#FullName', '#vFullName');
+                }
+                if (password == "") {
+                    customvalidation('#Password', '#vPassword');
+                }
+
+                SaveUser();
+            });
+
+            //Save to DB
+            function SaveUser() {
+                var fullname = $('#FullName').val();
+
+                var formData = new FormData();
+                formData.append("FullName", fullname);
+                formData.append("Password", fullname);
+                //alert(itemId);
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    datatype: "application/json",
+                    data: formData,
+                    url: '/User/CreateUser',
+                    success: function (data) {
+                        //alert("Success : " + data.ProductId + " Cart :" + data.Count );
+                        //$("#CartCount").text(data.Count);
+                        alert("Success : " + data.FullName);
+                        //alert(data.FullName);
+                        alert(data);
+
+                    }
+                    ,
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("There is a problem." + errorThrown);
+                    }
+                });
+            }
+
+            //Show custom validation for text box
+            function customvalidation(txtid, lblid) {
+
+                $(txtid).css({ 'border-color': 'red', 'border-width': '1px' });
+                $(lblid).css('display', 'inline-block');
+                return
+            }
+            //Hide custom validation for text box
+            function hidecustomvalidation(txtid, lblid) {
+
+                $(txtid).css({ 'border-color': 'black', 'border-width': '1px' });
+                $(lblid).css('display', 'none');
+                return
+            }
+        })
+    </script>
+}
+

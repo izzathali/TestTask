@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TestTask.Model\TestTask.Model.csproj" />
+  </ItemGroup>
+
 </Project>

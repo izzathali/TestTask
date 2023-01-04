@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
+using TestTask.Interface;
+using TestTask.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IUser, UserRepo>();
+
 
 //Db Connection
 var connectionString = builder.Configuration.GetConnectionString("DevConnection");
@@ -27,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();
