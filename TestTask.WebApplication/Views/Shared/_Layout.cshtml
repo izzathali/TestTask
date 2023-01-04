@@ -35,9 +35,13 @@
     <link rel="stylesheet" href="~/be/dist/css/adminlte.min.css">
     @*<link rel="stylesheet" href="~/css/customstyle.css" asp-append-version="true" >*@
 
-   @* <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>*@
+    @* <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>*@
 
-     @await RenderSectionAsync("link", required: false)
+    <!-- jsGrid -->
+    <link rel="stylesheet" href="~/be/plugins/jsgrid/jsgrid.min.css">
+    <link rel="stylesheet" href="~/be/plugins/jsgrid/jsgrid-theme.min.css">
+
+    @await RenderSectionAsync("link", required: false)
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed text-sm layout-footer-fixed">
@@ -284,10 +288,8 @@
         </aside>
         <!-- /.control-sidebar -->
 
-
         
-
-        <!-- jQuery -->
+       <!-- jQuery -->
         <script src="~/be/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="~/be/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -322,6 +324,7 @@
         @*<script src="~/be/dist/js/pages/dashboard.js"></script>*@
 
         <!-- DataTables  & Plugins -->
+        @*
         <script src="~/be/plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="~/be/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
         <script src="~/be/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -333,12 +336,16 @@
         <script src="~/be/plugins/pdfmake/vfs_fonts.js"></script>
         <script src="~/be/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
         <script src="~/be/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-        <script src="~/be/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+        <script src="~/be/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>*@
+
+        <!-- jsGrid -->
+        <script src="~/be/plugins/jsgrid/demos/db.js"></script>
+        <script src="~/be/plugins/jsgrid/jsgrid.min.js"></script>
 
 
         @await RenderSectionAsync("script", required: false)
 
-       @* <!-- Select2 -->
+        @* <!-- Select2 -->
         <script type="text/javascript" src="~/be/plugins/select2/js/select2.full.min.js"></script>
         <!-- Bootstrap4 Duallistbox -->
         <script src="~/be/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
@@ -362,6 +369,6 @@
 
     </div>
 
-    
+
 </body>
 </html>

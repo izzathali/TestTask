@@ -49,6 +49,7 @@ namespace TestTask.Repository
         {
             throw new NotImplementedException();
         }
+
         //Update user
         public Task<int> Update(UserM t)
         {
