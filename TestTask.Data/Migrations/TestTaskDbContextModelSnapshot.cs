@@ -52,7 +52,7 @@ namespace TestTask.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserContacts");
+                    b.ToTable("UserContacts", (string)null);
                 });
 
             modelBuilder.Entity("TestTask.Model.UserM", b =>
@@ -87,7 +87,7 @@ namespace TestTask.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TestTask.Model.UserContactM", b =>

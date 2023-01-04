@@ -54,10 +54,63 @@
                                                class="form-control"
                                                placeholder="Full Name">
 
-                                        <div id="vFullName" class="invalid-feedback">Please fill out this field.</div>
+                                        <div id="vFullName" class="invalid-feedback"></div>
 
                                     </div>
+                                    @*//--- testting*@
+                                    <div class="form-group">
+                                        <label class="control-label">Mobile</label>
 
+                                        <input id="MobileNo"
+                                               type="tel"
+                                               class="form-control"
+                                               placeholder="Mobile">
+
+                                        <div id="vMobileNo" class="invalid-feedback"></div>
+
+                                    </div>
+                                    @*-------------*@
+                                    @for (int i = 0; i < Model.userContacts.Count; i++)
+                                    {
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Email ID</label>
+
+                                                    <input asp-for="@Model.userContacts[i].EmailID"
+                                                       type="text"
+                                                       class="form-control"
+                                                       placeholder="Email ID">
+
+                                                    <div id="vEmailId" class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Mobile</label>
+
+                                                    <input asp-for="@Model.userContacts[i].Mobile"
+                                                       type="text"
+                                                       class="form-control"
+                                                       placeholder="Mobile">
+
+                                                    <div id="vMobile" class="invalid-feedback"></div>
+                                                </div>
+                                                @*<div class="form-group">
+                                                    <br />
+
+                                                    <button id="btnremove-@i" type="button" class="btn btn-sm btn-danger mt-2 visible" onclick="DeleteItem(this)">
+                                                        <span class="tf-icons fa fa-times"></span>
+                                                    </button>
+                                                </div>*@
+                                            </div>
+
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <a href="#" class="control-label ">Add another contact</a>
+                                    </div>
                                     <div class="form-group">
                                         <label asp-for="Password" class="control-label"></label>
 
@@ -66,21 +119,40 @@
                                                class="form-control"
                                                placeholder="Password">
 
-                                        <div id="vPassword" class="invalid-feedback">Please fill out this field.</div>
+                                        <div id="vPassword" class="invalid-feedback"></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label">Confirm Password</label>
 
-                                        <input type="password" class="form-control" placeholder="Confirm Password">
+                                        <input id="ConfirmPassword"
+                                               type="password"
+                                               class="form-control"
+                                               placeholder="Confirm Password">
+
+                                        <div id="vConfirmPassword" class="invalid-feedback"></div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label asp-for="Gender" class="control-label"></label>
+                                        <label class="control-label">Gender</label>
 
-                                        Unknown <input type="radio" class="form-control" asp-for="Gender" value="1" />
-                                        Male <input type="radio" class="form-control" asp-for="Gender" value="2" />
-                                        Female <input type="radio" class="form-control" asp-for="Gender" value="3" />
+                                        <div class="form-check">
+
+                                            <input type="radio" id="Unknown" name="Gender" class="form-check-input" value="0" />
+                                            <label for="Unknown" class="form-check-label" >Unknown</label>
+
+
+                                        </div>
+                                        <div class="form-check">
+
+                                            <input type="radio" id="Male" name="Gender" class="form-check-input" value="1" />
+                                            <label for="Male" class="form-check-label" >Male</label>
+                                        </div>
+                                        <div class="form-check">
+
+                                            <input type="radio" id="Female" name="Gender" class="form-check-input" value="2" />
+                                            <label for="Female" class="form-check-label">Female</label>
+                                        </div>
 
                                     </div>
 
@@ -106,8 +178,8 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="card-footer">
-                                    <button id="btnSave" 
-                                            type="button" 
+                                    <button id="btnSave"
+                                            type="button"
                                             class="btn btn-primary">
                                         <span class="tf-icons fas fa-save"></span>&nbsp; Save
                                     </button>
@@ -152,30 +224,80 @@
                 readURL(this);
             })
 
+
+
             //Validation when save button click
             $("#btnSave").click(function () {
 
                 var fullname = $('#FullName').val();
                 var password = $('#Password').val();
+                var confirm_password = $('#ConfirmPassword').val();
+                var phoneNumber = $('#MobileNo').val();
 
                 if (fullname == "") {
-                    customvalidation('#FullName', '#vFullName');
+                    customvalidation('#FullName', '#vFullName', "Please fill out this field.");
                 }
+                //Password validation
+                var regularExpression = /^(?=.*[0-9])(?=.*[!@@#$%^&*])[a-zA-Z0-9!@@#$%^&*]{6,16}$/;
+
                 if (password == "") {
-                    customvalidation('#Password', '#vPassword');
+                    customvalidation('#Password', '#vPassword', "Please fill out this field.");
+                }
+                else if (password.length < 8) {
+                    customvalidation('#Password', '#vPassword', "Please enter at least 8 digit password!");
+                }
+                else if (!regularExpression.test(password)) {
+                    customvalidation('#Password', '#vPassword', "Password should contain atleast one special character!");
                 }
 
-                SaveUser();
+                //Confirm password validation
+                if (confirm_password == "") {
+                    customvalidation('#ConfirmPassword', '#vConfirmPassword', "Please fill out this field.");
+                }
+                if (password != confirm_password) {
+                    customvalidation('#ConfirmPassword', '#vConfirmPassword', "Password is not matching");
+                }
+
+                //Mobile no validation
+                var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+
+                if (filter.test(phoneNumber)) {
+                    if (phoneNumber.length == 10) {
+                        var validate = true;
+                    } else {
+                        customvalidation('#MobileNo', '#vMobileNo', "Please put 10  digit mobile number");
+                        var validate = false;
+                    }
+                }
+                else {
+                    customvalidation('#MobileNo', '#vMobileNo', "Not a valid number");
+                    var validate = false;
+                }
+
+                if (validate) {
+                    //number is equal to 10 digit or number is not string
+                }
+
+                //SaveUser();
             });
 
             //Save to DB
             function SaveUser() {
+
+                //property values
                 var fullname = $('#FullName').val();
+                var password = $('#Password').val();
+                var confirm_password = $('#ConfirmPassword').val()
+
+                var file_input = $('#iPhotoFile')[0];
+                var file = file_input.files[0];
 
                 var formData = new FormData();
                 formData.append("FullName", fullname);
-                formData.append("Password", fullname);
-                //alert(itemId);
+                formData.append("Password", password);
+                formData.append("iPhotoFile", file);
+
+
                 $.ajax({
                     async: false,
                     type: 'POST',
@@ -185,11 +307,7 @@
                     data: formData,
                     url: '/User/CreateUser',
                     success: function (data) {
-                        //alert("Success : " + data.ProductId + " Cart :" + data.Count );
-                        //$("#CartCount").text(data.Count);
-                        alert("Success : " + data.FullName);
-                        //alert(data.FullName);
-                        alert(data);
+                        alert("Success : " + data.outpt);
 
                     }
                     ,
@@ -200,10 +318,11 @@
             }
 
             //Show custom validation for text box
-            function customvalidation(txtid, lblid) {
+            function customvalidation(txtid, lblid, msg) {
 
                 $(txtid).css({ 'border-color': 'red', 'border-width': '1px' });
                 $(lblid).css('display', 'inline-block');
+                $(lblid).text(msg);
                 return
             }
             //Hide custom validation for text box

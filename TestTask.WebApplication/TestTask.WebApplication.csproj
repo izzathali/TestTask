@@ -21,4 +21,8 @@
     <ProjectReference Include="..\TestTask.Repository\TestTask.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\UserPicture\" />
+  </ItemGroup>
+
 </Project>

@@ -21,8 +21,18 @@ namespace TestTask.Repository
         //Add User
         public async Task<int> Create(UserM t)
         {
-            _db.Users.Add(t);
-            return await _db.SaveChangesAsync();
+            try
+            {
+                t.CreatedOn = DateTime.Now;
+                _db.Users.Add(t);
+                return await _db.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
         }
         //Delete User
         public Task<int> Delete(object id)
