@@ -242,6 +242,8 @@
 
             //Validation when save button click
             $("#btnSave").click(function () {
+                
+
 
                 //Hide all error
                 hidecustomvalidation('#FullName', '#vFullName');
@@ -336,14 +338,14 @@
                 //Photo validation
                 var file_input = $('#iPhotoFile')[0];
                 var file = file_input.files[0];
-                if(file == null){
+                if (file == null) {
                     customvalidation('#iPhotoFile', '#viPhotoFile', "Please select the picture");
                     validate = false;
                 }
 
                 //Check validate
                 if (validate) {
-                    
+
                     SaveUser();
                 }
             });
@@ -387,9 +389,10 @@
                     data: formData,
                     url: '/User/CreateUser',
                     success: function (data) {
-                        if(data.outpt > 0){
+                        if (data.outpt > 0) {
                             cleartext();
-                            alert("Success : " + data.outpt);
+                            //alert("Success : " + data.outpt);
+                            swal("Successfully Saved!", "Your user recored has added!", "success");
                         }
                     }
                     ,
@@ -423,6 +426,10 @@
                 $(lblid).css('display', 'none');
                 return
             }
+
+
+            //Success message
+
         })
     </script>
 }
