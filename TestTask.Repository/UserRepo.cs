@@ -19,18 +19,20 @@ namespace TestTask.Repository
             _db = db;
         }
         //Add User
-        public async Task<int> Create(UserM t)
+        public async Task<Guid?> Create(UserM t)
         {
             try
             {
                 t.CreatedOn = DateTime.Now;
                 _db.Users.Add(t);
-                return await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
+
+                return t.UserId;
 
             }
             catch (Exception ex)
             {
-                return 0;
+                return null;
             }
 
         }

@@ -8,7 +8,7 @@ namespace TestTask.Interface
 {
     public interface ICrud<T>
     {
-        public Task<int> Create(T t);
+        public Task<Guid?> Create(T t);
         public Task<int> Update(T t);
         public Task<int> Delete(object id);
         public Task<IEnumerable<T>> GetAll();

@@ -11,7 +11,7 @@ namespace TestTask.Model
     public class UserContactM : BaseEntity
     {
         [Key]
-        public int UserContactId { get; set; }
+        public Guid UserConId { get; set; }
 
         [Display(Name = "Email ID")]
         [Column(TypeName = "nvarchar(250)")]

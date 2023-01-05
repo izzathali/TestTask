@@ -117,11 +117,12 @@ namespace TestTask.WebApplication.Controllers
             return View(user);
 
         }
+
         //Create New User
         [HttpPost]
         public async Task<JsonResult> CreateUser(UserM usr)
         {
-            int changes = 0;
+            Guid? changes = null;
             try
             {
                 //Save image to wwwroot/user photo
@@ -151,10 +152,11 @@ namespace TestTask.WebApplication.Controllers
 
             return Json(result);
         }
+        //Create User Contact
         [HttpPost]
         public async Task<JsonResult> CreateUserContact(UserContactM usrCon)
         {
-            int changes = 0;
+            Guid? changes = null;
 
             try
             {

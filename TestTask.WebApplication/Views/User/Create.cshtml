@@ -345,7 +345,7 @@
 
                 //Check validate
                 if (validate) {
-
+                    
                     SaveUser();
                 }
             });
@@ -359,20 +359,10 @@
                 var confirm_password = $('#ConfirmPassword').val()
                 var phone_number = $('#MobileNo').val();
                 var email_id = $('#EmailId').val();
+                var gender =  $('input[name="Gender"]:checked').val();
 
                 var file_input = $('#iPhotoFile')[0];
                 var file = file_input.files[0];
-
-                //var userConData = {
-
-                //    EmailID: email_id,
-                //    Mobile: phone_number,
-                //};
-
-                //var userConlist = {
-                //    UserContactM = JSON.stringify({ 'UserContactM': userConData });
-                //};
-
 
 
                 var formData = new FormData();
@@ -381,7 +371,9 @@
                 formData.append("iPhotoFile", file);
                 formData.append("EmailId", email_id);
                 formData.append("MobileNo", phone_number);
+                formData.append("Gender", gender);
 
+                //Save User
                 $.ajax({
                     async: false,
                     type: 'POST',
@@ -391,12 +383,13 @@
                     data: formData,
                     url: '/User/CreateUser',
                     success: function (data) {
-                        if (data.outpt > 0) {
+                        if (data.outpt != null) {
                             //alert("Success : " + data.outpt);
 
                             var formUserContactData = new FormData();
                             formUserContactData.append("EmailId", email_id);
                             formUserContactData.append("Mobile", phone_number);
+                            formUserContactData.append("UserId", data.outpt);
 
                             //Add User Contact
                             $.ajax({
@@ -408,8 +401,10 @@
                                 data: formUserContactData,
                                 url: '/User/CreateUserContact',
                                 success: function (data) {
-                                    if (data.res > 0) {
+                                    if (data.res != null) {
                                         //alert("Success : " + data.res);
+                                        cleartext();
+                                        swal("Successfully Saved!", "Your user recored has added!", "success");
 
                                     }
                                 }
@@ -419,8 +414,6 @@
                                 }
                             });
 
-                            cleartext();
-                            swal("Successfully Saved!", "Your user recored has added!", "success");
                         }
                     }
                     ,
@@ -436,7 +429,10 @@
                 $('#MobileNo').val("");
                 $('#EmailId').val("");
                 $('#iPhotoFile').val("");
+                $(":radio[name='Gender'][value='0']").attr('checked', true);
+                
                 $('#propic').attr("src", "@Url.Content("~/be/dist/img/default.jpg")");
+
             }
 
             //Show custom validation for text box
