@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestTask.Data;
 
@@ -11,9 +12,11 @@ using TestTask.Data;
 namespace TestTask.Data.Migrations
 {
     [DbContext(typeof(TestTaskDbContext))]
-    partial class TestTaskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230105051509_update_user_contact")]
+    partial class updateusercontact
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

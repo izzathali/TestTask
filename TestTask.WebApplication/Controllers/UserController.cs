@@ -25,19 +25,19 @@ namespace TestTask.WebApplication.Controllers
         }
 
         // GET: UserController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
+        {
+
+            return View(await iUser.GetAll());
+        }
+        // GET: UserController
+        public ActionResult IndexGrid()
         {
             return View();
         }
-        [HttpGet]
-        public async Task<JsonResult> GetAllUser()
-        {
-            var user = await iUser.GetAll();
-
-            return Json(user);
-        }
-        [HttpGet]
-        public async Task<JsonResult> LoadData()
+      
+        [HttpPost]
+        public IActionResult LoadData()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace TestTask.WebApplication.Controllers
                 // Paging Length 10,20  
                 var length = Request.Form["length"].FirstOrDefault();
                 // Sort Column Name  
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][FullName]"].FirstOrDefault();
                 // Sort Column Direction ( asc ,desc)  
                 var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
                 // Search Value from (Search box)  
@@ -58,16 +58,15 @@ namespace TestTask.WebApplication.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
-                // Getting all Customer data  
-                //var customerData = (from tempcustomer in _context.CustomerTB
-                //                    select tempcustomer);
-                var customerData = await iUser.GetAll();
+                // Getting all data  
+                var customerData = iUser.Users;
 
                 //Sorting  
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-                {
-                    //customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
-                }
+                //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                //{
+                //    customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                //}
+
                 //Search  
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -82,7 +81,7 @@ namespace TestTask.WebApplication.Controllers
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

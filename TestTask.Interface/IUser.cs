@@ -9,6 +9,6 @@ namespace TestTask.Interface
 {
     public interface IUser : ICrud<UserM>
     {
-
+        IQueryable<UserM> Users { get; }
     }
 }

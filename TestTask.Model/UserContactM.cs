@@ -15,11 +15,11 @@ namespace TestTask.Model
 
         [Display(Name = "Email ID")]
         [Column(TypeName = "nvarchar(250)")]
-        public string? EmailID { get; set; }
+        public string EmailID { get; set; } = null!;
 
         [Display(Name = "Mobile Number")]
         [Column(TypeName = "nvarchar(10)")]
-        public string? Mobile { get; set; }
+        public string Mobile { get; set; } = null!;
 
         public Guid UserId { get; set; }
         public virtual UserM? user { get; set; }

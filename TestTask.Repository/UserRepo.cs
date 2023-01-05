@@ -18,6 +18,9 @@ namespace TestTask.Repository
         {
             _db = db;
         }
+
+        public IQueryable<UserM> Users => (from tempUser in _db.Users select tempUser);
+
         //Add User
         public async Task<Guid?> Create(UserM t)
         {
