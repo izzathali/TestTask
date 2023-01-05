@@ -182,11 +182,23 @@ namespace TestTask.WebApplication.Controllers
         {
             return View();
         }
+        //Delete User
         [HttpDelete]
-        public JsonResult Delete(Guid UserId)
+        public async Task<JsonResult> Delete(Guid UserId)
         {
-            var dd = UserId;
-            return Json("delete");
+            int changes = 0;
+
+            try
+            {
+                changes = await iUser.Delete(UserId);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            var result = new { changes = changes };
+            return Json(result);
         }
         // POST: UserController/Delete/5
         [HttpPost]

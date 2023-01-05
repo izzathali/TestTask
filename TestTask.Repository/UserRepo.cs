@@ -40,9 +40,24 @@ namespace TestTask.Repository
 
         }
         //Delete User
-        public Task<int> Delete(object id)
+        public async Task<int> Delete(object id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _db.Users.FindAsync(id);
+
+                if (user != null)
+                {
+                    user.IsDeleted = true;
+                    _db.Users.Update(user);
+                }
+
+                return await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
         //Get all Users
         public async Task<IEnumerable<UserM>> GetAll()
