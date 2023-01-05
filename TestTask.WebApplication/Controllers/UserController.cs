@@ -14,12 +14,14 @@ namespace TestTask.WebApplication.Controllers
     public class UserController : Controller
     {
         private readonly IUser iUser;
+        private readonly IUserContact iUserContact;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public UserController(IUser _iUser, IWebHostEnvironment hostEnvironment)
+        public UserController(IUser _iUser, IWebHostEnvironment hostEnvironment, IUserContact iUserContact)
         {
             iUser = _iUser;
             _hostEnvironment = hostEnvironment;
+            this.iUserContact = iUserContact;
         }
 
         // GET: UserController
@@ -95,36 +97,28 @@ namespace TestTask.WebApplication.Controllers
         // GET: UserController/Create
         public ActionResult Create()
         {
-            UserM user = new UserM();
-            user.userContacts.Add(new UserContactM() { UserContactId = 1 });
+            //UserM user = new UserM();
+            //user.userContacts.Add(new UserContactM() { UserContactId = 1 });
+            //return View(user);
 
-            return View(user);
+            return View();
         }
 
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("UserId,FullName,Gender,Photo,iPhotoFile")] UserM user)
+        public ActionResult Create([Bind("UserId,FullName,Gender,Photo,iPhotoFile")] UserM user)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    await iUser.Create(user);
 
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch
+            if (ModelState.IsValid)
             {
-                return View(user);
+                return RedirectToAction(nameof(Index));
             }
-
             return View(user);
+
         }
         //Create New User
         [HttpPost]
-        //public async Task<JsonResult> CreateUser(string FullName, string Password, IFormFile iPhotoFile)
         public async Task<JsonResult> CreateUser(UserM usr)
         {
             int changes = 0;
@@ -154,6 +148,24 @@ namespace TestTask.WebApplication.Controllers
             }
 
             var result = new { outpt = changes };
+
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CreateUserContact(UserContactM usrCon)
+        {
+            int changes = 0;
+
+            try
+            {
+                //Save new user contact
+                changes = await iUserContact.Create(usrCon);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            var result = new { res = changes };
 
             return Json(result);
         }

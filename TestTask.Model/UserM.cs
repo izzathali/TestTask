@@ -30,6 +30,6 @@ namespace TestTask.Model
         [NotMapped]
         public IFormFile? iPhotoFile { get; set; }
 
-        public virtual List<UserContactM> userContacts { get; set; } = new List<UserContactM>();
+        public virtual List<UserContactM>? userContacts { get; set; }
     }
 }

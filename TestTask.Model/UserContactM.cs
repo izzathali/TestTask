@@ -22,7 +22,7 @@ namespace TestTask.Model
         public string? Mobile { get; set; }
 
         public Guid UserId { get; set; }
-        public virtual UserM user { get; set; }
+        public virtual UserM? user { get; set; }
 
     }
 }

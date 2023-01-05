@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUser, UserRepo>();
+builder.Services.AddScoped<IUserContact, UserContactRepo>();
 
 
 //Db Connection

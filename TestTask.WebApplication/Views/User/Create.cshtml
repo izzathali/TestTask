@@ -242,7 +242,7 @@
 
             //Validation when save button click
             $("#btnSave").click(function () {
-                
+
 
 
                 //Hide all error
@@ -370,15 +370,17 @@
                 //};
 
                 //var userConlist = {
-                //    UserContactM = userConData,
+                //    UserContactM = JSON.stringify({ 'UserContactM': userConData });
                 //};
+
+
 
                 var formData = new FormData();
                 formData.append("FullName", fullname);
                 formData.append("Password", password);
                 formData.append("iPhotoFile", file);
-                //formData.append("userContacts", userConlist);
-
+                formData.append("EmailId", email_id);
+                formData.append("MobileNo", phone_number);
 
                 $.ajax({
                     async: false,
@@ -390,8 +392,34 @@
                     url: '/User/CreateUser',
                     success: function (data) {
                         if (data.outpt > 0) {
-                            cleartext();
                             //alert("Success : " + data.outpt);
+
+                            var formUserContactData = new FormData();
+                            formUserContactData.append("EmailId", email_id);
+                            formUserContactData.append("Mobile", phone_number);
+
+                            //Add User Contact
+                            $.ajax({
+                                async: false,
+                                type: 'POST',
+                                contentType: false,
+                                processData: false,
+                                datatype: "application/json",
+                                data: formUserContactData,
+                                url: '/User/CreateUserContact',
+                                success: function (data) {
+                                    if (data.res > 0) {
+                                        //alert("Success : " + data.res);
+
+                                    }
+                                }
+                                ,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert("There is a problem." + errorThrown);
+                                }
+                            });
+
+                            cleartext();
                             swal("Successfully Saved!", "Your user recored has added!", "success");
                         }
                     }
