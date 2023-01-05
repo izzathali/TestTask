@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.Metrics;
+using System.Threading.Channels;
 using TestTask.Interface;
 using TestTask.Model;
 
@@ -126,6 +127,7 @@ namespace TestTask.WebApplication.Controllers
         //public async Task<JsonResult> CreateUser(string FullName, string Password, IFormFile iPhotoFile)
         public async Task<JsonResult> CreateUser(UserM usr)
         {
+            int changes = 0;
             try
             {
                 //Save image to wwwroot/user photo
@@ -144,16 +146,14 @@ namespace TestTask.WebApplication.Controllers
                 }
 
                 //Save new user
-                await iUser.Create(usr);
+                changes = await iUser.Create(usr);
 
             }
             catch (Exception ex)
             {
-
             }
 
-            var result = new { outpt = 1 };
-
+            var result = new { outpt = changes };
 
             return Json(result);
         }

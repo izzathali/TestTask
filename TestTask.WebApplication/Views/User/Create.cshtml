@@ -150,7 +150,7 @@
 
                                         <div class="form-check">
 
-                                            <input type="radio" id="Unknown" name="Gender" class="form-check-input" value="0" />
+                                            <input type="radio" id="Unknown" name="Gender" class="form-check-input" value="0" checked />
                                             <label for="Unknown" class="form-check-label">Unknown</label>
 
 
@@ -172,6 +172,8 @@
                                         <label asp-for="Photo" class="control-label"></label>
 
                                         <input asp-for="iPhotoFile" accept="image/*" class="form-control" />
+
+                                        <div id="viPhotoFile" class="invalid-feedback"></div>
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
@@ -241,15 +243,27 @@
             //Validation when save button click
             $("#btnSave").click(function () {
 
+                //Hide all error
+                hidecustomvalidation('#FullName', '#vFullName');
+                hidecustomvalidation('#Password', '#vPassword');
+                hidecustomvalidation('#ConfirmPassword', '#vConfirmPassword');
+                hidecustomvalidation('#MobileNo', '#vMobileNo');
+                hidecustomvalidation('#EmailId', '#vEmailId');
+                hidecustomvalidation('#iPhotoFile', '#viPhotoFile');
+
+
                 var fullname = $('#FullName').val();
                 var password = $('#Password').val();
                 var confirm_password = $('#ConfirmPassword').val();
                 var phone_number = $('#MobileNo').val();
                 var email_id = $('#EmailId').val();
 
+                var validate = true;
+
                 //Fullname validation
                 if (fullname == "") {
                     customvalidation('#FullName', '#vFullName', "Please fill out this field.");
+                    validate = false;
                 }
 
                 //Email validation
@@ -258,16 +272,18 @@
                     if (!expr.test(email)) {
                         return false;
                     }
-                    else{
+                    else {
                         return true;
                     }
                 }
 
                 if (email_id == "") {
                     customvalidation('#EmailId', '#vEmailId', "Please fill out this field.");
+                    validate = false;
                 }
                 else if (ValidateEmail(email_id) == false) {
                     customvalidation('#EmailId', '#vEmailId', "Not a valid email.");
+                    validate = false;
                 }
 
 
@@ -277,40 +293,59 @@
 
                 if (filter.test(phone_number)) {
                     if (phone_number.length == 10) {
-                        var validate = true;
+                        validate = true;
                     } else {
                         customvalidation('#MobileNo', '#vMobileNo', "Please put 10  digit mobile number");
-                        var validate = false;
+                        validate = false;
                     }
                 }
                 else {
                     customvalidation('#MobileNo', '#vMobileNo', "Not a valid number");
-                    var validate = false;
+                    validate = false;
                 }
 
                 //Password validation
-                var regularExpression = /^(?=.*[0-9])(?=.*[!@@#$%^&*])[a-zA-Z0-9!@@#$%^&*]{6,16}$/;
+                //var regularExpression = /^(?=.*\d)(?=.*[!@@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+                var regularExpression = @Html.Raw("/^(?=.*[!@#$%^&*]).{8,}$/");
+
 
                 if (password == "") {
                     customvalidation('#Password', '#vPassword', "Please fill out this field.");
+                    validate = false;
                 }
                 else if (password.length < 8) {
                     customvalidation('#Password', '#vPassword', "Please enter at least 8 digit password!");
+                    validate = false;
                 }
                 else if (!regularExpression.test(password)) {
                     customvalidation('#Password', '#vPassword', "Password should contain atleast one special character!");
+                    validate = false;
                 }
 
                 //Confirm password validation
                 if (confirm_password == "") {
                     customvalidation('#ConfirmPassword', '#vConfirmPassword', "Please fill out this field.");
+                    validate = false;
                 }
                 else if (password != confirm_password) {
                     customvalidation('#ConfirmPassword', '#vConfirmPassword', "Password is not matching");
+                    validate = false;
                 }
 
 
-                SaveUser();
+                //Photo validation
+                var file_input = $('#iPhotoFile')[0];
+                var file = file_input.files[0];
+                if(file == null){
+                    customvalidation('#iPhotoFile', '#viPhotoFile', "Please select the picture");
+                    validate = false;
+                }
+
+                //Check validate
+                if (validate) {
+                    
+                    SaveUser();
+                }
             });
 
             //Save to DB
@@ -352,14 +387,25 @@
                     data: formData,
                     url: '/User/CreateUser',
                     success: function (data) {
-                        alert("Success : " + data.outpt);
-
+                        if(data.outpt > 0){
+                            cleartext();
+                            alert("Success : " + data.outpt);
+                        }
                     }
                     ,
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert("There is a problem." + errorThrown);
                     }
                 });
+            }
+            function cleartext() {
+                $('#FullName').val("");
+                $('#Password').val("");
+                $('#ConfirmPassword').val("")
+                $('#MobileNo').val("");
+                $('#EmailId').val("");
+                $('#iPhotoFile').val("");
+                $('#propic').attr("src", "@Url.Content("~/be/dist/img/default.jpg")");
             }
 
             //Show custom validation for text box
