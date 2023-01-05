@@ -103,25 +103,11 @@ namespace TestTask.WebApplication.Controllers
             return View();
         }
 
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("UserId,FullName,Gender,Photo,iPhotoFile")] UserM user)
-        {
-
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-
-        }
-
         //Create New User
         [HttpPost]
         public async Task<JsonResult> CreateUser(UserM usr)
         {
-            Guid? changes = null;
+            Guid? user_id = null;
             try
             {
                 //Save image to wwwroot/user photo
@@ -140,14 +126,14 @@ namespace TestTask.WebApplication.Controllers
                 }
 
                 //Save new user
-                changes = await iUser.Create(usr);
+                user_id = await iUser.Create(usr);
 
             }
             catch (Exception ex)
             {
             }
 
-            var result = new { outpt = changes };
+            var result = new { inserted_user_id = user_id};
 
             return Json(result);
         }
@@ -155,18 +141,18 @@ namespace TestTask.WebApplication.Controllers
         [HttpPost]
         public async Task<JsonResult> CreateUserContact(UserContactM usrCon)
         {
-            Guid? changes = null;
+            Guid? user_contact_id = null;
 
             try
             {
                 //Save new user contact
-                changes = await iUserContact.Create(usrCon);
+                user_contact_id = await iUserContact.Create(usrCon);
             }
             catch (Exception ex)
             {
 
             }
-            var result = new { res = changes };
+            var result = new { inserted_user_con_id = user_contact_id };
 
             return Json(result);
         }
@@ -196,7 +182,12 @@ namespace TestTask.WebApplication.Controllers
         {
             return View();
         }
-
+        [HttpDelete]
+        public JsonResult Delete(Guid UserId)
+        {
+            var dd = UserId;
+            return Json("delete");
+        }
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

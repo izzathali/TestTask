@@ -345,7 +345,6 @@
 
                 //Check validate
                 if (validate) {
-                    
                     SaveUser();
                 }
             });
@@ -383,13 +382,13 @@
                     data: formData,
                     url: '/User/CreateUser',
                     success: function (data) {
-                        if (data.outpt != null) {
-                            //alert("Success : " + data.outpt);
+                        if (data.inserted_user_id != null) {
+                            alert("Success : " + data.inserted_user_id);
 
                             var formUserContactData = new FormData();
                             formUserContactData.append("EmailId", email_id);
                             formUserContactData.append("Mobile", phone_number);
-                            formUserContactData.append("UserId", data.outpt);
+                            formUserContactData.append("UserId", data.inserted_user_id);
 
                             //Add User Contact
                             $.ajax({
@@ -401,11 +400,14 @@
                                 data: formUserContactData,
                                 url: '/User/CreateUserContact',
                                 success: function (data) {
-                                    if (data.res != null) {
-                                        //alert("Success : " + data.res);
+                                    if (data.inserted_user_con_id != null) {
+                                        alert("Success : " + data.inserted_user_con_id);
                                         cleartext();
-                                        swal("Successfully Saved!", "Your user recored has added!", "success");
 
+                                        swal("Successfully Saved!", "Your user recored has added!", "success");
+                                    }
+                                    else{
+                                        swal("Error!", "Something went wrong!", "error");
                                     }
                                 }
                                 ,
@@ -414,6 +416,9 @@
                                 }
                             });
 
+                        } 
+                        else {
+                            swal("Error!", "Something went wrong!", "error");
                         }
                     }
                     ,
