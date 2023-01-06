@@ -40,7 +40,7 @@ namespace TestTask.Repository
 
         }
         //Delete User
-        public async Task<int> Delete(object id)
+        public async Task<int> Delete(Guid id)
         {
             try
             {
@@ -65,9 +65,9 @@ namespace TestTask.Repository
             return await _db.Users.Where(i => i.IsDeleted == false).ToListAsync();
         }
         //Get user by id
-        public Task<UserM> GetById(int id)
+        public async Task<UserM> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _db.Users.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
         }
 
         //Update user

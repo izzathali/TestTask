@@ -9,6 +9,7 @@ namespace TestTask.Interface
 {
     public interface IUserContact : ICrud<UserContactM>
     {
-
+        public Task<UserContactM> GetFirstByUserId(Guid id);
+        public Task<List<UserContactM>> GetAllByUserId(Guid id);
     }
 }

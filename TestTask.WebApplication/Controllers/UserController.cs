@@ -35,7 +35,7 @@ namespace TestTask.WebApplication.Controllers
         {
             return View();
         }
-      
+
         [HttpPost]
         public IActionResult LoadData()
         {
@@ -133,7 +133,7 @@ namespace TestTask.WebApplication.Controllers
             {
             }
 
-            var result = new { inserted_user_id = user_id};
+            var result = new { inserted_user_id = user_id };
 
             return Json(result);
         }
@@ -157,9 +157,28 @@ namespace TestTask.WebApplication.Controllers
             return Json(result);
         }
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(Guid id)
         {
-            return View();
+            try
+            {
+                //Get User by user id
+                var user = await iUser.GetById(id);
+                //Get user contact by user id
+                var userCont = await iUserContact.GetFirstByUserId(id);
+
+                if (user == null)
+                {
+                    return RedirectToAction("PageNotFound", "Error");
+                }
+
+                ViewBag.UserContact = userCont;
+
+                return View(user);
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
 
         // POST: UserController/Edit/5

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ namespace TestTask.Repository
             }
         }
 
-        public Task<int> Delete(object id)
+        public Task<int> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -44,9 +45,19 @@ namespace TestTask.Repository
             throw new NotImplementedException();
         }
 
-        public Task<UserContactM> GetById(int id)
+        public async Task<List<UserContactM>> GetAllByUserId(Guid id)
+        {
+            return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).ToListAsync();
+        }
+
+        public Task<UserContactM> GetById(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<UserContactM> GetFirstByUserId(Guid id)
+        {
+            return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
         }
 
         public Task<int> Update(UserContactM t)

@@ -10,9 +10,9 @@ namespace TestTask.Interface
     {
         public Task<Guid?> Create(T t);
         public Task<int> Update(T t);
-        public Task<int> Delete(object id);
+        public Task<int> Delete(Guid id);
         public Task<IEnumerable<T>> GetAll();
-        public Task<T> GetById(int id);
+        public Task<T> GetById(Guid id);
 
     }
 }
