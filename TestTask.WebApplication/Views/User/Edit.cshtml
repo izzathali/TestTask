@@ -38,7 +38,9 @@
                     <!-- form start -->
                     <form>
                         <input type="hidden" asp-for="UserId" class="form-control" />
+                        <input type="hidden" asp-for="CreatedOn" class="form-control" />
                         <input type="hidden" id="UserConId" class="form-control" value="@userCon?.UserConId" />
+                        <input type="hidden" id="user_cont_createdon" class="form-control" value="@userCon?.CreatedOn" />
 
                         <div class="row">
                             <div class="col-md-6">
@@ -342,6 +344,7 @@
                 var existing_photo = $('#Photo').val();
                 var user_id = $('#UserId').val();
                 var user_contact_id = $('#UserConId').val();
+                var created_on = $('#CreatedOn').val();
 
                 var file_input = $('#iPhotoFile')[0];
                 var file = file_input.files[0];
@@ -355,6 +358,7 @@
                 formUser.append("MobileNo", phone_number);
                 formUser.append("Gender", gender);
                 formUser.append("UserId", user_id);
+                formUser.append("CreatedOn", created_on);
                 formUser.append("Photo", existing_photo);
 
                 var formUserContactData = new FormData();
@@ -362,6 +366,7 @@
                 formUserContactData.append("Mobile", phone_number);
                 formUserContactData.append("UserId", user_id);
                 formUserContactData.append("UserConId", user_contact_id);
+                formUserContactData.append("CreatedOn", user_cont_createdon);
 
                 //var datamodel = new FormData();
                 //datamodel.append("user", fromUser);

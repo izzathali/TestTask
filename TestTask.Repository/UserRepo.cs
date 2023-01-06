@@ -46,6 +46,7 @@ namespace TestTask.Repository
                 if (user != null)
                 {
                     user.IsDeleted = true;
+                    user.LastModifiedOn = DateTime.Now;
                     _db.Users.Update(user);
                 }
 
@@ -88,6 +89,7 @@ namespace TestTask.Repository
             {
                 if (t != null) {
 
+                    t.LastModifiedOn = DateTime.Now;
                     _db.Users.Update(t);
                 }
 

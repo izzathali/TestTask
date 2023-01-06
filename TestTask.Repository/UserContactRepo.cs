@@ -40,6 +40,27 @@ namespace TestTask.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<int> DeleteByUserId(Guid id)
+        {
+            try
+            {
+                var user = await _db.UserContacts.Where(i => i.UserId == id).FirstOrDefaultAsync();
+
+                if (user != null)
+                {
+                    user.IsDeleted = true;
+                    user.LastModifiedOn = DateTime.Now;
+                    _db.UserContacts.Update(user);
+                }
+
+                return await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
         public Task<IEnumerable<UserContactM>> GetAll()
         {
             throw new NotImplementedException();
@@ -81,7 +102,7 @@ namespace TestTask.Repository
             {
                 if (t != null)
                 {
-
+                    t.LastModifiedOn = DateTime.Now;
                     _db.UserContacts.Update(t);
                 }
 

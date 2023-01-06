@@ -186,6 +186,7 @@ namespace TestTask.WebApplication.Controllers
             try
             {
                 changes = await iUser.Delete(UserId);
+                var chnges_user_cont = await iUserContact.DeleteByUserId(UserId);
             }
             catch (Exception ex)
             {

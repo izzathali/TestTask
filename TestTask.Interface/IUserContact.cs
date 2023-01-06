@@ -11,5 +11,6 @@ namespace TestTask.Interface
     {
         public Task<UserContactM> GetFirstByUserId(Guid id);
         public Task<List<UserContactM>> GetAllByUserId(Guid id);
+        public Task<int> DeleteByUserId(Guid id);
     }
 }
