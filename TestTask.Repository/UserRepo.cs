@@ -18,9 +18,6 @@ namespace TestTask.Repository
         {
             _db = db;
         }
-
-        public IQueryable<UserM> Users => (from tempUser in _db.Users select tempUser);
-
         //Add User
         public async Task<Guid?> Create(UserM t)
         {
@@ -101,6 +98,11 @@ namespace TestTask.Repository
             {
                 return 0;
             }
+        }
+
+        public PagedResult<UserM> Users(int p)
+        {
+            return this._db.Users.Where(i => i.IsDeleted == false).GetPaged(p,10);
         }
     }
 }

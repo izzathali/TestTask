@@ -1,5 +1,8 @@
 ﻿@using TestTask.Model;
-@model IEnumerable<UserM>
+@addTagHelper *, LazZiya.TagHelpers
+@model PagedResult<UserM>
+
+
 
 @{
     ViewData["Title"] = "User Report";
@@ -25,7 +28,6 @@
     </div><!-- /.container-fluid -->
 </section>
 
-
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -35,67 +37,57 @@
 
                 <div class="card card-lightblue">
                     <div class="card-header">
-                        <h3 class="card-title">User Report</h3>
+                        <h3 class="card-title">Existing User Report</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table cellpadding="0" cellspacing="0" class="table table-bordered table-hover table-condensed">
                             <thead>
                                 <tr>
-                                    <th>FullName</th>
+                                    <th>Full Name</th>
                                     <th>Password</th>
                                     <th>Gender</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach (var usr in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@usr.FullName</td>
+                                        <td>@usr.Password</td>
+                                        <td>
+                                            @switch (@usr.Gender)
+                                            {
+                                                case 0:
+                                                    <p>Unknown</p>
+                                                    ;
+                                                    break;
+                                                case 1:
+                                                    <p>Male</p>
+                                                    ;
+                                                    break;
+                                                case 2:
+                                                    <p>Female</p>
+                                                    ;
+                                                    break;
 
-                                @{
-                                    if (@Model != null)
-                                    {
-                                        @foreach (var item in @Model)
-                                        {
-                                            <tr>
-                                                <td>@item.FullName</td>
-                                                <td>@item.Password</td>
-                                                <td>
-
-                                                    @switch (@item.Gender)
-                                                    {
-                                                        case 0:
-                                                            <p>Unknown</p>
-                                                            ;
-                                                            break;
-                                                        case 1:
-                                                            <p>Male</p>
-                                                            ;
-                                                            break;
-                                                        case 2:
-                                                            <p>Female</p>
-                                                            ;
-                                                            break;
-
-                                                        default:
-                                                            <p>Not given</p>
-                                                            break;
-                                                    }
-                                                </td>
-                                                <td>
-                                                    <a asp-action="Edit" class="btn btn-warning btn-xs" asp-route-id="@item.UserId"><i class="fas fa-edit me-1"></i> Edit</a>
-                                                    <button type="button" class="btn btn-danger btn-xs" onclick="DeleteUser('@item.UserId')">
-                                                        <i class="fas fa-trash me-1"></i> Delete
-                                                    </button>
-
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-
+                                                default:
+                                                    <p>Not given</p>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" class="btn btn-warning btn-xs" asp-route-id="@usr.UserId"><i class="fas fa-edit me-1"></i> Edit</a>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="DeleteUser('@usr.UserId')">
+                                                <i class="fas fa-trash me-1"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
                                 }
-
                             </tbody>
-
                         </table>
+
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -108,6 +100,13 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+
+<paging page-no="@Model.CurrentPage"
+        page-size="@Model.PageSize"
+        total-records="@(Model.RowCount)">
+</paging>
+
+
 @section Scripts{
     <script type="text/javascript">
 
