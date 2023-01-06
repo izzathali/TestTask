@@ -47,7 +47,15 @@ namespace TestTask.Repository
 
         public async Task<List<UserContactM>> GetAllByUserId(Guid id)
         {
-            return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).ToListAsync();
+            try
+            {
+                return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return new List<UserContactM>();
+            }
         }
 
         public Task<UserContactM> GetById(Guid id)
@@ -57,12 +65,33 @@ namespace TestTask.Repository
 
         public async Task<UserContactM> GetFirstByUserId(Guid id)
         {
-            return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
+            try
+            {
+                return await _db.UserContacts.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return new UserContactM();
+            }
         }
 
-        public Task<int> Update(UserContactM t)
+        public async Task<int> Update(UserContactM t)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (t != null)
+                {
+
+                    _db.UserContacts.Update(t);
+                }
+
+                return await _db.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
     }
 }

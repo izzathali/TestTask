@@ -87,11 +87,6 @@ namespace TestTask.WebApplication.Controllers
             }
 
         }
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: UserController/Create
         public ActionResult Create()
@@ -181,21 +176,60 @@ namespace TestTask.WebApplication.Controllers
             }
         }
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        //Update User
+        [HttpPut]
+        public async Task<JsonResult> UpdateUser(UserM user)
         {
+            int changes = 0;
+
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                if (user.iPhotoFile != null)
+                {
+                    //Save image to wwwroot/user photo
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
 
+                    if (user.iPhotoFile != null)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(user.iPhotoFile.FileName);
+                        string extension = Path.GetExtension(user.iPhotoFile.FileName);
+                        user.Photo = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        string path = Path.Combine(wwwRootPath + "/UserPicture/", fileName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await user.iPhotoFile.CopyToAsync(fileStream);
+                        }
+                    }
+                }
+                changes = await iUser.Update(user);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            var result = new { changes = changes};
+
+            return Json(result);
+        }
+        //Update User
+        [HttpPut]
+        public async Task<JsonResult> UpdateUserContact(UserContactM userCon)
+        {
+            int changes = 0;
+
+            try
+            {
+
+                changes = await iUserContact.Update(userCon);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            var result = new { changes = changes };
+
+            return Json(result);
+        }
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -219,19 +253,6 @@ namespace TestTask.WebApplication.Controllers
             var result = new { changes = changes };
             return Json(result);
         }
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

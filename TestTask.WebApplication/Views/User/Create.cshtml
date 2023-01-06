@@ -383,7 +383,7 @@
                     url: '/User/CreateUser',
                     success: function (data) {
                         if (data.inserted_user_id != null) {
-                            alert("Success : " + data.inserted_user_id);
+                            //alert("Success : " + data.inserted_user_id);
 
                             var formUserContactData = new FormData();
                             formUserContactData.append("EmailId", email_id);

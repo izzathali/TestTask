@@ -62,18 +62,45 @@ namespace TestTask.Repository
         //Get all Users
         public async Task<IEnumerable<UserM>> GetAll()
         {
-            return await _db.Users.Where(i => i.IsDeleted == false).ToListAsync();
+            try
+            {
+                return await _db.Users.Where(i => i.IsDeleted == false).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new List<UserM>();
+            }
         }
         //Get user by id
         public async Task<UserM> GetById(Guid id)
         {
-            return await _db.Users.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
+            try
+            {
+                return await _db.Users.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return new UserM();
+            }
         }
 
         //Update user
-        public Task<int> Update(UserM t)
+        public async Task<int> Update(UserM t)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (t != null) {
+
+                    _db.Users.Update(t);
+                }
+
+                return await _db.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
     }
 }

@@ -37,6 +37,9 @@
                     <!-- /.card-header -->
                     <!-- form start -->
                     <form>
+                        <input type="hidden" asp-for="UserId" class="form-control" />
+                        <input type="hidden" id="UserConId" class="form-control" value="@userCon?.UserConId" />
+
                         <div class="row">
                             <div class="col-md-6">
 
@@ -165,7 +168,7 @@
                                     <button id="btnSave"
                                             type="button"
                                             class="btn btn-primary">
-                                        <span class="tf-icons fas fa-save"></span>&nbsp; Save
+                                        <span class="tf-icons fas fa-save"></span>&nbsp; Update
                                     </button>
                                     <button type="reset" class="btn btn-default">
                                         <span class="tf-icons fas fa-times"></span>&nbsp; Cancel
@@ -195,6 +198,10 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            //load index page
+            function load() {
+                window.location.href = '/User/Index';
+            };
 
             //Preview & Update an image before it is uploaded
             function readURL(input) {
@@ -317,14 +324,13 @@
                 }
 
                 //Check validate
-                if (validate) {
-                    //SaveUser();
-                    alert("save")
+                if(validate) {
+                    UpdateUser();
                 }
             });
 
             //Save to DB
-            function SaveUser() {
+            function UpdateUser() {
 
                 //property values
                 var fullname = $('#FullName').val();
@@ -334,52 +340,63 @@
                 var email_id = $('#EmailId').val();
                 var gender = $('input[name="Gender"]:checked').val();
                 var existing_photo = $('#Photo').val();
+                var user_id = $('#UserId').val();
+                var user_contact_id = $('#UserConId').val();
 
                 var file_input = $('#iPhotoFile')[0];
                 var file = file_input.files[0];
 
 
-                var formData = new FormData();
-                formData.append("FullName", fullname);
-                formData.append("Password", password);
-                formData.append("iPhotoFile", file);
-                formData.append("EmailId", email_id);
-                formData.append("MobileNo", phone_number);
-                formData.append("Gender", gender);
+                var formUser = new FormData();
+                formUser.append("FullName", fullname);
+                formUser.append("Password", password);
+                formUser.append("iPhotoFile", file);
+                formUser.append("EmailId", email_id);
+                formUser.append("MobileNo", phone_number);
+                formUser.append("Gender", gender);
+                formUser.append("UserId", user_id);
+                formUser.append("Photo", existing_photo);
 
-                //Save User
+                var formUserContactData = new FormData();
+                formUserContactData.append("EmailId", email_id);
+                formUserContactData.append("Mobile", phone_number);
+                formUserContactData.append("UserId", user_id);
+                formUserContactData.append("UserConId", user_contact_id);
+
+                //var datamodel = new FormData();
+                //datamodel.append("user", fromUser);
+                //datamodel.append("userContact", formUserContactData);
+
+                //Update User
                 $.ajax({
                     async: false,
-                    type: 'POST',
+                    type: 'PUT',
                     contentType: false,
                     processData: false,
                     datatype: "application/json",
-                    data: formData,
-                    url: '/User/CreateUser',
+                    data: formUser,
+                    url: '/User/UpdateUser',
                     success: function (data) {
-                        if (data.inserted_user_id != null) {
-                            alert("Success : " + data.inserted_user_id);
+                        if (data.changes > 0) {
+                            //alert("Successfully updated user");
 
-                            var formUserContactData = new FormData();
-                            formUserContactData.append("EmailId", email_id);
-                            formUserContactData.append("Mobile", phone_number);
-                            formUserContactData.append("UserId", data.inserted_user_id);
-
-                            //Add User Contact
+                            //Update User Contact
                             $.ajax({
                                 async: false,
-                                type: 'POST',
+                                type: 'PUT',
                                 contentType: false,
                                 processData: false,
                                 datatype: "application/json",
                                 data: formUserContactData,
-                                url: '/User/CreateUserContact',
+                                url: '/User/UpdateUserContact',
                                 success: function (data) {
-                                    if (data.inserted_user_con_id != null) {
-                                        //alert("Success : " + data.inserted_user_con_id);
-                                        cleartext();
-
-                                        swal("Successfully Saved!", "Your user recored has added!", "success");
+                                    if (data.changes > 0) {
+                                        //alert("Successfully updated user contact ");
+                                        //cleartext();
+                                        swal("Successfully Updated!", "Your user recored has updated!", "success")
+                                            .then((value) => {
+                                                load();
+                                            });
                                     }
                                     else {
                                         swal("Error!", "Something went wrong!", "error");
