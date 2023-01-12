@@ -33,11 +33,70 @@ namespace TestTask.WebApplication.Controllers
         // GET: UserController/Create
         public ActionResult Create()
         {
-            //UserM user = new UserM();
-            //user.userContacts.Add(new UserContactM() { UserContactId = 1 });
-            //return View(user);
+            try
+            {
+                UserM user = new UserM();
+                user.userContacts.Add(new UserContactM()
+                {
+                    UserConId = Guid.NewGuid()
+                });
+                return View(user);
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
+        // POST: UserController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(UserM usr)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Guid? user_id = null;
 
-            return View();
+                    //Save image to wwwroot/user photo
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+
+                    if (usr.iPhotoFile != null)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(usr.iPhotoFile.FileName);
+                        string extension = Path.GetExtension(usr.iPhotoFile.FileName);
+                        usr.Photo = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        string path = Path.Combine(wwwRootPath + "/UserPicture/", fileName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await usr.iPhotoFile.CopyToAsync(fileStream);
+                        }
+                    }
+
+                    //Save new user
+                    user_id = await iUser.Create(usr);
+
+                    if (user_id != null)
+                    {
+                        TempData["userid"] = user_id;
+                        return RedirectToAction("Create");
+                    }
+                    else
+                    {
+                        TempData["msg"] = "error";
+                        return View(usr);
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+            return View(usr);
         }
 
         //Create New User
