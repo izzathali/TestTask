@@ -8,10 +8,11 @@ using System.Diagnostics.Metrics;
 using System.Threading.Channels;
 using TestTask.Interface;
 using TestTask.Model;
+using static TestTask.WebApplication.Controllers.Enum;
 
 namespace TestTask.WebApplication.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUser iUser;
         private readonly IUserContact iUserContact;
@@ -54,6 +55,9 @@ namespace TestTask.WebApplication.Controllers
         {
             try
             {
+                //Default photo path
+                usr.Photo = "bk1234357618.jpg";
+
                 if (ModelState.IsValid)
                 {
                     Guid? user_id = null;
@@ -78,25 +82,28 @@ namespace TestTask.WebApplication.Controllers
 
                     if (user_id != null)
                     {
-                        TempData["userid"] = user_id;
+                        Alert("User has successfully saved", NotificationType.success);
                         return RedirectToAction("Create");
                     }
                     else
                     {
-                        TempData["msg"] = "error";
+                        Alert("Something went wrong!", NotificationType.error);
                         return View(usr);
                     }
                 }
-
+                else
+                {
+                    Alert("Input property wrong!", NotificationType.error);
+                    return View(usr);
+                }
 
             }
             catch (Exception ex)
             {
+                Alert("Something went wrong!", NotificationType.error);
+                return View(usr);
 
             }
-
-
-            return View(usr);
         }
 
         //Create New User

@@ -38,7 +38,7 @@
     @* <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>*@
 
     <!-- jsGrid -->
-   @* <link rel="stylesheet" href="~/be/plugins/jsgrid/jsgrid.min.css">
+    @* <link rel="stylesheet" href="~/be/plugins/jsgrid/jsgrid.min.css">
     <link rel="stylesheet" href="~/be/plugins/jsgrid/jsgrid-theme.min.css">*@
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -271,6 +271,8 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <main role="main">
+                <partial name="_NotificationPanel" />
+
                 @RenderBody()
             </main>
         </div>
@@ -289,9 +291,7 @@
             <!-- Control sidebar content goes here -->
         </aside>
         <!-- /.control-sidebar -->
-
-        
-       <!-- jQuery -->
+        <!-- jQuery -->
         <script src="~/be/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="~/be/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -322,7 +322,7 @@
         <!-- AdminLTE App -->
         <script src="~/be/dist/js/adminlte.js"></script>
 
-        
+
 
         <!-- DataTables  & Plugins -->
         @*
@@ -343,7 +343,7 @@
         <script src="~/be/plugins/jsgrid/demos/db.js"></script>
         <script src="~/be/plugins/jsgrid/jsgrid.min.js"></script>
 
-       
+
 
 
         @await RenderSectionAsync("script", required: false)

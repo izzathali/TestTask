@@ -15,17 +15,7 @@
     }
 
 </style>
-@if (TempData["userid"] != null)
-{
 
-    <script type="text/javascript">
-        window.onload = function () {
-            swal("Good job!", 'User record has successfully saved!', "success");
-        };
-    </script>
-
-
-}
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -116,7 +106,8 @@
                                         <input asp-for="Password"
                                                type="password"
                                                class="form-control"
-                                               placeholder="Password">
+                                               placeholder="Password"
+                                               value="@Model.Password" >
 
                                         <span asp-validation-for="Password" class="error"></span>
                                     </div>
@@ -127,7 +118,8 @@
                                         <input asp-for="ConfirmPassword"
                                                type="password"
                                                class="form-control"
-                                               placeholder="Confirm Password">
+                                               placeholder="Confirm Password" 
+                                               value="@Model.Password" >
 
                                         <span asp-validation-for="ConfirmPassword" class="error"></span>
                                     </div>
