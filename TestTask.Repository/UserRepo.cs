@@ -70,11 +70,15 @@ namespace TestTask.Repository
             }
         }
         //Get user by id
-        public async Task<UserM> GetById(Guid id)
+        public async Task<UserM?> GetById(Guid id)
         {
             try
             {
-                return await _db.Users.Where(i => i.IsDeleted == false && i.UserId == id).FirstOrDefaultAsync();
+                return await _db
+                    .Users
+                    .Where(i => i.IsDeleted == false && i.UserId == id)
+                    .Include(i => i.userContacts)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

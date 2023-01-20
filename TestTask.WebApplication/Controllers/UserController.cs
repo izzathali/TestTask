@@ -17,12 +17,14 @@ namespace TestTask.WebApplication.Controllers
         private readonly IUser iUser;
         private readonly IUserContact iUserContact;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IImage iImage;
 
-        public UserController(IUser _iUser, IWebHostEnvironment hostEnvironment, IUserContact iUserContact)
+        public UserController(IUser _iUser, IWebHostEnvironment hostEnvironment, IUserContact iUserContact, IImage iImage)
         {
             iUser = _iUser;
             _hostEnvironment = hostEnvironment;
             this.iUserContact = iUserContact;
+            this.iImage = iImage;
         }
 
         // GET: UserController
@@ -67,13 +69,15 @@ namespace TestTask.WebApplication.Controllers
 
                     if (usr.iPhotoFile != null)
                     {
-                        string fileName = Path.GetFileNameWithoutExtension(usr.iPhotoFile.FileName);
-                        string extension = Path.GetExtension(usr.iPhotoFile.FileName);
-                        usr.Photo = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        string path = Path.Combine(wwwRootPath + "/UserPicture/", fileName);
-                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        var photo = await iImage.SaveUserPhoto(wwwRootPath, "/UserPicture/", usr.iPhotoFile);
+                        if (photo != null)
                         {
-                            await usr.iPhotoFile.CopyToAsync(fileStream);
+                            usr.Photo = photo;
+                        }
+                        else
+                        {
+                            Alert("Something went wrong while photo saving!", NotificationType.error);
+                            return View(usr);
                         }
                     }
 
@@ -150,20 +154,22 @@ namespace TestTask.WebApplication.Controllers
 
                         if (user.iPhotoFile != null)
                         {
-                            string fileName = Path.GetFileNameWithoutExtension(user.iPhotoFile.FileName);
-                            string extension = Path.GetExtension(user.iPhotoFile.FileName);
-                            user.Photo = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                            string path = Path.Combine(wwwRootPath + "/UserPicture/", fileName);
-                            using (var fileStream = new FileStream(path, FileMode.Create))
+                            var photo = await iImage.SaveUserPhoto(wwwRootPath,"/UserPicture/", user.iPhotoFile);
+                            if (photo != null)
                             {
-                                await user.iPhotoFile.CopyToAsync(fileStream);
+                                user.Photo = photo;
+                            }
+                            else
+                            {
+                                Alert("Something went wrong while photo saving!", NotificationType.error);
+                                return View(user);
                             }
                         }
                     }
 
                     changes = await iUser.Update(user);
 
-                    if (changes > 0 )
+                    if (changes > 0)
                     {
                         Alert("User has successfully Updated", NotificationType.success);
                         return RedirectToAction("Index");
@@ -187,25 +193,6 @@ namespace TestTask.WebApplication.Controllers
                 return View(user);
             }
 
-        }
-        //Update User
-        [HttpPut]
-        public async Task<JsonResult> UpdateUserContact(UserContactM userCon)
-        {
-            int changes = 0;
-
-            try
-            {
-
-                changes = await iUserContact.Update(userCon);
-            }
-            catch (Exception ex)
-            {
-
-            }
-            var result = new { changes = changes };
-
-            return Json(result);
         }
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)

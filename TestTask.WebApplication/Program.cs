@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
 using TestTask.Interface;
 using TestTask.Repository;
+using TestTask.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUser, UserRepo>();
 builder.Services.AddScoped<IUserContact, UserContactRepo>();
+builder.Services.AddScoped<IImage, ImageSer>();
 
 
 //Db Connection
