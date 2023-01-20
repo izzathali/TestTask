@@ -23,6 +23,7 @@
     <ProjectReference Include="..\TestTask.Data\TestTask.Data.csproj" />
     <ProjectReference Include="..\TestTask.Interface\TestTask.Interface.csproj" />
     <ProjectReference Include="..\TestTask.Repository\TestTask.Repository.csproj" />
+    <ProjectReference Include="..\TestTask.Service\TestTask.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

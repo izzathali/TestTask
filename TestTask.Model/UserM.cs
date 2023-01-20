@@ -37,7 +37,6 @@ namespace TestTask.Model
         [Display(Name = "Photo")]
         public string Photo { get; set; } = string.Empty;
         [NotMapped]
-        [Required(ErrorMessage = "Photo is required.")]
         public IFormFile? iPhotoFile { get; set; }
 
         public virtual List<UserContactM>? userContacts { get; set; } = new List<UserContactM>();

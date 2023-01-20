@@ -9,6 +9,6 @@ namespace TestTask.Interface
 {
     public interface IUser : ICrud<UserM>
     {
-        PagedResult<UserM> Users(int p);
+        PagedResult<UserM> Users(int p,int rows);
     }
 }
