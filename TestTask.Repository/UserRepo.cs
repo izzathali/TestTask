@@ -102,9 +102,9 @@ namespace TestTask.Repository
             }
         }
 
-        public PagedResult<UserM> Users(int p)
+        public PagedResult<UserM> Users(int p,int rows)
         {
-            return this._db.Users.Where(i => i.IsDeleted == false).GetPaged(p,10);
+            return this._db.Users.Where(i => i.IsDeleted == false).GetPaged(p, rows);
         }
     }
 }

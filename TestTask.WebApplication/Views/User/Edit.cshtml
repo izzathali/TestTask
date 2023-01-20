@@ -6,6 +6,19 @@
     var userCon = ViewBag.UserContact as UserContactM;
 }
 
+@section link{
+
+    <link href="~/css/file_upload.css" rel="stylesheet" />
+}
+
+<style>
+    .error {
+        color: red;
+    }
+
+</style>
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -36,11 +49,11 @@
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form>
+                    <form asp-action="Edit" enctype="multipart/form-data">
+
                         <input type="hidden" asp-for="UserId" class="form-control" />
                         <input type="hidden" asp-for="CreatedOn" class="form-control" />
-                        <input type="hidden" id="UserConId" class="form-control" value="@userCon?.UserConId" />
-                        <input type="hidden" id="user_cont_createdon" class="form-control" value="@userCon?.CreatedOn" />
+                        <input type="hidden" asp-for="Photo" class="form-control" />
 
                         <div class="row">
                             <div class="col-md-6">
@@ -54,38 +67,43 @@
                                                class="form-control"
                                                placeholder="Full Name">
 
-                                        <div id="vFullName" class="invalid-feedback"></div>
-
+                                        <span asp-validation-for="FullName" class="error"></span>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Email ID</label>
 
-                                                <input id="EmailId"
+                                    @for (int i = 0; i < Model.userContacts?.Count; i++)
+                                    {
+                                        <input type="hidden" asp-for="@Model.userContacts[i].UserConId" class="form-control" />
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Email ID</label>
+
+                                                    <input asp-for="@Model.userContacts[i].EmailID"
                                                        type="text"
                                                        class="form-control"
-                                                       placeholder="Email ID"
-                                                       value="@userCon?.EmailID">
+                                                       placeholder="Email ID">
 
-                                                <div id="vEmailId" class="invalid-feedback"></div>
+                                                    <span asp-validation-for="@Model.userContacts[i].EmailID" class="error"></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Mobile</label>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Mobile</label>
 
-                                                <input id="MobileNo"
-                                                       type="tel"
+                                                    <input asp-for="@Model.userContacts[i].Mobile"
+                                                       type="text"
                                                        class="form-control"
-                                                       placeholder="Mobile"
-                                                       value="@userCon?.Mobile">
+                                                       placeholder="Mobile">
 
-                                                <div id="vMobileNo" class="invalid-feedback"></div>
+                                                    <span asp-validation-for="@Model.userContacts[i].Mobile" class="error"></span>
+                                                </div>
+
 
                                             </div>
+
                                         </div>
-                                    </div>
+                                    }
 
                                     <div class="form-group">
                                         <a href="#" class="control-label ">Add another contact</a>
@@ -99,19 +117,19 @@
                                                placeholder="Password"
                                                value="@Model.Password">
 
-                                        <div id="vPassword" class="invalid-feedback"></div>
+                                        <span asp-validation-for="Password" class="error"></span>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label">Confirm Password</label>
 
-                                        <input id="ConfirmPassword"
+                                        <input asp-for="ConfirmPassword"
                                                type="password"
                                                class="form-control"
                                                placeholder="Confirm Password"
                                                value="@Model.Password">
 
-                                        <div id="vConfirmPassword" class="invalid-feedback"></div>
+                                        <span asp-validation-for="ConfirmPassword" class="error"></span>
                                     </div>
 
                                     <div class="form-group">
@@ -119,33 +137,26 @@
 
                                         <div class="form-check">
 
-                                            <input type="radio" asp-for="Gender" name="Gender" class="form-check-input" value="0" />
+                                            <input asp-for="Gender" type="radio" id="Unknown" name="Gender" class="form-check-input" value="0" checked />
                                             <label for="Unknown" class="form-check-label">Unknown</label>
 
 
                                         </div>
                                         <div class="form-check">
 
-                                            <input type="radio" asp-for="Gender" name="Gender" class="form-check-input" value="1" />
+                                            <input asp-for="Gender" type="radio" id="Male" name="Gender" class="form-check-input" value="1" />
                                             <label for="Male" class="form-check-label">Male</label>
                                         </div>
                                         <div class="form-check">
 
-                                            <input type="radio" asp-for="Gender" name="Gender" class="form-check-input" value="2" />
+                                            <input asp-for="Gender" type="radio" id="Female" name="Gender" class="form-check-input" value="2" />
                                             <label for="Female" class="form-check-label">Female</label>
+                                            <span asp-validation-for="Gender" class="error"></span>
+
                                         </div>
 
                                     </div>
 
-                                    <div class="form-group">
-                                        <input type="hidden" asp-for="Photo" class="form-control" />
-
-                                        <label asp-for="Photo" class="control-label"></label>
-
-                                        <input asp-for="iPhotoFile" accept="image/*" class="form-control" />
-
-                                        <div id="viPhotoFile" class="invalid-feedback"></div>
-                                    </div>
                                 </div>
                                 <!-- /.card-body -->
 
@@ -155,20 +166,27 @@
                                 <div class="card-body">
 
                                     <div class="form-group">
+                                        <label asp-for="Photo" class="control-label"></label>
 
-                                        @{
-                                            string imgpath = string.IsNullOrEmpty(Model.Photo) ? "~/be/dist/img/default.jpg" : "~/UserPicture/" + Model.Photo;
-                                        }
+                                        <div class="drop-zone">
+                                            <span class="drop-zone__prompt"></span>
 
-                                        <img id="propic" class="photo img-fluid" style="width:100%;" src="@Url.Content(@imgpath)" />
+                                            <input type="file" asp-for="iPhotoFile" accept="image/*" value="@Model.iPhotoFile" class="drop-zone__input">
+
+                                            @{
+                                                string imgpath = string.IsNullOrEmpty(Model.Photo) ? "~/be/dist/img/default.jpg" : "~/userpicture/" + Model.Photo;
+                                            }
+
+                                            <div class="drop-zone__thumb" data-label="@Model.Photo" style="background-image:url('@Url.Content(@imgpath)')"></div>
+                                        </div>
+                                        <span asp-validation-for="iPhotoFile" class="error"></span>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="card-footer">
                                     <button id="btnSave"
-                                            type="button"
+                                            type="submit"
                                             class="btn btn-primary">
                                         <span class="tf-icons fas fa-save"></span>&nbsp; Update
                                     </button>
@@ -176,10 +194,9 @@
                                         <span class="tf-icons fas fa-times"></span>&nbsp; Cancel
                                     </button>
 
-                                    <button class="btn btn-outline-info pull-right" asp-action="Index">
+                                    <a class="btn btn-outline-info pull-right" asp-action="Index">
                                         <span class="tf-icons fas fa-list-ul"></span>&nbsp; View List
-                                    </button>
-
+                                    </a>
                                 </div>
                             </div>
 
@@ -193,9 +210,12 @@
     </div>
 </section>
 
-
 @section Scripts{
 
+    <script src="~/js/file_upload.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
 
     <script type="text/javascript">
 
@@ -326,7 +346,7 @@
                 }
 
                 //Check validate
-                if(validate) {
+                if (validate) {
                     UpdateUser();
                 }
             });
